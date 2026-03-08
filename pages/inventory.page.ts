@@ -11,6 +11,10 @@ export class InventoryPage {
     this.cartBadge = page.locator('.shopping_cart_badge');
   }
 
+  async goto() {
+    await this.page.goto('/inventory.html');
+  }
+
   async addItemToCart(dataTest: string) {
     await this.page.locator(`[data-test="${dataTest}"]`).click();
   }
