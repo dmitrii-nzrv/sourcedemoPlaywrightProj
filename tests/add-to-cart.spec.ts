@@ -24,29 +24,19 @@
 //   await expect(cartPage.getItemByName(products.bikeLight.label)).toBeVisible();
 // });
 
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/login.page';
-import { InventoryPage } from '../pages/inventory.page';
-import { CartPage } from '../pages/cart.page';
+import { test, expect } from '../fixtures/pages';
 
 import { users } from '../data/users';
 import { products } from '../data/products';
 
 test.describe('Add products to cart', () => {
-  let inventoryPage: InventoryPage;
-  let cartPage: CartPage;
-
-  test.beforeEach(async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    inventoryPage = new InventoryPage(page);
-    cartPage = new CartPage(page);
-
+  test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto();
     await loginPage.login(users.standard.username, users.standard.password);
   });
 
   for (const product of products) {
-    test(`user can add ${product.label} to cart`, async () => {
+    test(`user can add ${product.label} to cart`, async ({ inventoryPage, cartPage }) => {
       await inventoryPage.addItemToCart(product.dataTest);
 
       await inventoryPage.openCart();
@@ -55,7 +45,7 @@ test.describe('Add products to cart', () => {
     });
   }
 
-  test('user can add multiple products to cart', async () => {
+  test('user can add multiple products to cart', async ({ inventoryPage, cartPage }) => {
     for (const product of products) {
       await inventoryPage.addItemToCart(product.dataTest);
     }
